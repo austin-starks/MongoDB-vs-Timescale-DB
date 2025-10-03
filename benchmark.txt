@@ -1,0 +1,249 @@
+═══════════════════════════════════════════════════════════
+  DATABASE COMPARISON: MONGODB vs POSTGRESQL/TIMESCALEDB
+  (20 requests in batches of 4 parallel)
+═══════════════════════════════════════════════════════════
+
+Connecting to MongoDB...
+✓ MongoDB connected (pool size: 10)
+Connecting to PostgreSQL...
+✓ PostgreSQL connected (pool size: 10)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+STORAGE ANALYSIS
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+MongoDB Collections:
+  backtesthistories:
+    Data:        4.13 GB (compressed)
+    Uncompressed: 36.36 GB
+    Compression:  8.79x
+    Indexes:     2.57 GB
+    Total:       6.70 GB
+  portfoliohistories:
+    Data:        728.30 MB (compressed)
+    Uncompressed: 4.98 GB
+    Compression:  7.01x
+    Indexes:     321.69 MB
+    Total:       1.03 GB
+
+  MongoDB Total (data + indexes): 7.73 GB
+    - Data:    4.85 GB
+    - Indexes: 2.88 GB
+
+
+PostgreSQL/TimescaleDB Tables:
+  backtest_history:
+    Data:         6.28 GB
+    Indexes:      16.62 GB
+    Total:        22.90 GB
+  backtest_positions:
+    Data:         33.27 GB
+    Indexes:      79.55 GB
+    Total:        112.83 GB
+  portfolio_history:
+    Data:         89.42 MB
+    Indexes:      289.20 MB
+    Total:        393.94 MB
+  portfolio_positions:
+    Data:         202.81 MB
+    Indexes:      662.64 MB
+    Total:        1.59 GB
+
+  PostgreSQL/TimescaleDB Total (data + indexes): 136.93 GB
+    - Data:    39.83 GB
+    - Indexes: 97.10 GB
+
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+QUERY PERFORMANCE
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+BACKTEST: Positions + History
+─────────────────────────────────────────────────────────
+
+MongoDB:
+  Batch 1/5 (4 parallel requests):
+    Run 1: 490.00ms (381 rows, 1900 positions)
+    Run 2: 484.00ms (381 rows, 1900 positions)
+    Run 3: 488.00ms (381 rows, 1900 positions)
+    Run 4: 482.00ms (381 rows, 1900 positions)
+  Batch 2/5 (4 parallel requests):
+    Run 5: 194.00ms (381 rows, 1900 positions)
+    Run 6: 191.00ms (381 rows, 1900 positions)
+    Run 7: 188.00ms (381 rows, 1900 positions)
+    Run 8: 186.00ms (381 rows, 1900 positions)
+  Batch 3/5 (4 parallel requests):
+    Run 9: 195.00ms (381 rows, 1900 positions)
+    Run 10: 192.00ms (381 rows, 1900 positions)
+    Run 11: 230.00ms (381 rows, 1900 positions)
+    Run 12: 227.00ms (381 rows, 1900 positions)
+  Batch 4/5 (4 parallel requests):
+    Run 13: 231.00ms (381 rows, 1900 positions)
+    Run 14: 228.00ms (381 rows, 1900 positions)
+    Run 15: 247.00ms (381 rows, 1900 positions)
+    Run 16: 244.00ms (381 rows, 1900 positions)
+  Batch 5/5 (4 parallel requests):
+    Run 17: 245.00ms (381 rows, 1900 positions)
+    Run 18: 248.00ms (381 rows, 1900 positions)
+    Run 19: 271.00ms (381 rows, 1900 positions)
+    Run 20: 227.00ms (381 rows, 1900 positions)
+
+PostgreSQL:
+  Batch 1/5 (4 parallel requests):
+    Run 1: 1262.00ms (259 rows, 1290 positions)
+    Run 2: 1248.00ms (259 rows, 1290 positions)
+    Run 3: 1268.00ms (259 rows, 1290 positions)
+    Run 4: 1283.00ms (259 rows, 1290 positions)
+  Batch 2/5 (4 parallel requests):
+    Run 5: 344.00ms (259 rows, 1290 positions)
+    Run 6: 336.00ms (259 rows, 1290 positions)
+    Run 7: 334.00ms (259 rows, 1290 positions)
+    Run 8: 340.00ms (259 rows, 1290 positions)
+  Batch 3/5 (4 parallel requests):
+    Run 9: 363.00ms (259 rows, 1290 positions)
+    Run 10: 408.00ms (259 rows, 1290 positions)
+    Run 11: 405.00ms (259 rows, 1290 positions)
+    Run 12: 402.00ms (259 rows, 1290 positions)
+  Batch 4/5 (4 parallel requests):
+    Run 13: 338.00ms (259 rows, 1290 positions)
+    Run 14: 395.00ms (259 rows, 1290 positions)
+    Run 15: 340.00ms (259 rows, 1290 positions)
+    Run 16: 394.00ms (259 rows, 1290 positions)
+  Batch 5/5 (4 parallel requests):
+    Run 17: 400.00ms (259 rows, 1290 positions)
+    Run 18: 435.00ms (259 rows, 1290 positions)
+    Run 19: 332.00ms (259 rows, 1290 positions)
+    Run 20: 344.00ms (259 rows, 1290 positions)
+
+
+PORTFOLIO: Multi-resolution bucketing with positions
+─────────────────────────────────────────────────────────
+
+MongoDB:
+  Batch 1/5 (4 parallel requests):
+    Run 1: 1066.00ms (628 rows, 5510 positions)
+    Run 2: 1072.00ms (628 rows, 5510 positions)
+    Run 3: 1084.00ms (628 rows, 5510 positions)
+    Run 4: 1062.00ms (628 rows, 5510 positions)
+  Batch 2/5 (4 parallel requests):
+    Run 5: 902.00ms (628 rows, 5510 positions)
+    Run 6: 891.00ms (628 rows, 5510 positions)
+    Run 7: 939.00ms (628 rows, 5510 positions)
+    Run 8: 918.00ms (628 rows, 5510 positions)
+  Batch 3/5 (4 parallel requests):
+    Run 9: 843.00ms (628 rows, 5510 positions)
+    Run 10: 930.00ms (628 rows, 5510 positions)
+    Run 11: 974.00ms (628 rows, 5510 positions)
+    Run 12: 979.00ms (628 rows, 5510 positions)
+  Batch 4/5 (4 parallel requests):
+    Run 13: 845.00ms (628 rows, 5510 positions)
+    Run 14: 834.00ms (628 rows, 5510 positions)
+    Run 15: 877.00ms (628 rows, 5510 positions)
+    Run 16: 987.00ms (628 rows, 5510 positions)
+  Batch 5/5 (4 parallel requests):
+    Run 17: 818.00ms (628 rows, 5510 positions)
+    Run 18: 904.00ms (628 rows, 5510 positions)
+    Run 19: 899.00ms (628 rows, 5510 positions)
+    Run 20: 944.00ms (628 rows, 5510 positions)
+
+PostgreSQL:
+  Batch 1/5 (4 parallel requests):
+    Run 1: 948.00ms (628 rows, 5870 positions)
+    Run 2: 832.00ms (628 rows, 5870 positions)
+    Run 3: 734.00ms (628 rows, 5870 positions)
+    Run 4: 706.00ms (628 rows, 5870 positions)
+  Batch 2/5 (4 parallel requests):
+    Run 5: 960.00ms (628 rows, 5870 positions)
+    Run 6: 646.00ms (628 rows, 5870 positions)
+    Run 7: 586.00ms (628 rows, 5870 positions)
+    Run 8: 502.00ms (628 rows, 5870 positions)
+  Batch 3/5 (4 parallel requests):
+    Run 9: 885.00ms (628 rows, 5870 positions)
+    Run 10: 684.00ms (628 rows, 5870 positions)
+    Run 11: 733.00ms (628 rows, 5870 positions)
+    Run 12: 563.00ms (628 rows, 5870 positions)
+  Batch 4/5 (4 parallel requests):
+    Run 13: 845.00ms (628 rows, 5870 positions)
+    Run 14: 639.00ms (628 rows, 5870 positions)
+    Run 15: 637.00ms (628 rows, 5870 positions)
+    Run 16: 586.00ms (628 rows, 5870 positions)
+  Batch 5/5 (4 parallel requests):
+    Run 17: 951.00ms (628 rows, 5870 positions)
+    Run 18: 706.00ms (628 rows, 5870 positions)
+    Run 19: 646.00ms (628 rows, 5870 positions)
+    Run 20: 537.00ms (628 rows, 5870 positions)
+
+
+
+═══════════════════════════════════════════════════════════
+  COMPREHENSIVE RESULTS
+═══════════════════════════════════════════════════════════
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+QUERY PERFORMANCE COMPARISON
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Backtest Query:
+  MongoDB:
+    Avg:    274.40ms
+    Median: 231.00ms
+    P95:    490.00ms
+    Range:  186.00ms - 490.00ms
+  PostgreSQL:
+    Avg:    548.55ms
+    Median: 395.00ms
+    P95:    1283.00ms
+    Range:  332.00ms - 1283.00ms
+  Winner: MongoDB is 99.9% faster
+
+Portfolio Query:
+  MongoDB:
+    Avg:    938.40ms
+    Median: 930.00ms
+    P95:    1084.00ms
+    Range:  818.00ms - 1084.00ms
+  PostgreSQL:
+    Avg:    716.30ms
+    Median: 706.00ms
+    P95:    960.00ms
+    Range:  502.00ms - 960.00ms
+  Winner: PostgreSQL is 23.7% faster
+
+Combined Total (both queries):
+  MongoDB:    1212.80ms
+  PostgreSQL: 1264.85ms
+  Winner: MongoDB is 4.3% faster
+
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+STORAGE COMPARISON
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+MongoDB:                7.73 GB
+PostgreSQL/TimescaleDB: 136.93 GB
+
+Difference: PostgreSQL uses 1671.8% more storage than MongoDB
+
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+COST ANALYSIS (4 CPU / 16GB Memory)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Current MongoDB Setup (90GB storage, includes operational data):
+  Monthly Cost: $231.35
+  Storage:      90 GB total
+  Time Series:  7.73 GB
+
+PostgreSQL/TimescaleDB Option (separate time series database):
+  Monthly Cost: $590.00 (additional, time series only)
+  Storage:      136.93 GB (time series data)
+  Note:         Would be in addition to operational database
+
+
+COST SUMMARY:
+──────────────────────────────────────────────────────────
+  MongoDB (current):    $231.35/month (all-in-one)
+  PostgreSQL (new):     $821.35/month ($231.35 + $590.00)
+  Additional Cost:      $590.00/month (+255%)
+──────────────────────────────────────────────────────────
+
